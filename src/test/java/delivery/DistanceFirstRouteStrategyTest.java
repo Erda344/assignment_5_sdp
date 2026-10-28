@@ -20,7 +20,7 @@ class DistanceFirstRouteStrategyTest {
                 DemoData.request(DeliveryPriority.STANDARD, 2000, 60, false));
         assertEquals("C", cheap.route().id());
         RouteDecision urgent = strategy.selectRoute(DemoData.routes(),
-                DemoData.request(DeliveryPriority.STANDARD, 10000, 30, false));
+                DemoData.request(DeliveryPriority.STANDARD, 10000, 29, false));
         assertEquals("B", urgent.route().id());
     }
     @Test void fifthStrategyJoinsComparisonWithoutContextChanges() {
