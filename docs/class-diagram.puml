@@ -1,0 +1,114 @@
+@startuml
+!pragma layout smetana
+title Smart Delivery Strategy Class Diagram
+skinparam classAttributeIconSize 0
+hide empty members
+interface RouteStrategy {
+  +selectRoute(routes: List<Route>, request: DeliveryRequest): RouteDecision
+  +getStrategyName(): String
+}
+class RoutePlanner <<Context>> {
+  -strategy: RouteStrategy
+  +setStrategy(strategy: RouteStrategy): void
+  +plan(routes: List<Route>, request: DeliveryRequest): RouteDecision
+}
+abstract class ScoredRouteStrategy {
+  +selectRoute(routes, request): RouteDecision
+  #scoring(feasible, request): ToDoubleFunction<Route>
+  #formula(): String
+}
+class FastestRouteStrategy
+class CheapestRouteStrategy
+class EcoFriendlyRouteStrategy
+class BalancedRouteStrategy {
+  -timeWeight: double
+  -costWeight: double
+  -distanceWeight: double
+  -emissionWeight: double
+}
+class DistanceFirstRouteStrategy
+class StrategySelector {
+  -strategies: Map<DeliveryPriority, RouteStrategy>
+  +select(request: DeliveryRequest): RouteStrategy
+}
+class StrategyComparison {
+  -strategies: List<RouteStrategy>
+  +compare(routes, request): List<RouteDecision>
+}
+class Main
+class DemoData
+class RouteConstraints {
+  {static} ~violations(route, request): List<String>
+}
+class NoSuitableRouteException
+class RuntimeException
+class Route <<record>> {
+  +id: String
+  +origin: Location
+  +destination: Location
+  +distanceKm: double
+  +estimatedMinutes: int
+  +trafficPenaltyMinutes: int
+  +weatherPenaltyMinutes: int
+  +baseCost: double
+  +costPerKm: double
+  +extraFees: double
+  +carbonEmissionKg: double
+  +available: boolean
+  +finalMinutes(): double
+  +totalCost(request): double
+}
+class DeliveryRequest <<record>> {
+  +origin: Location
+  +destination: Location
+  +priority: DeliveryPriority
+  +maxBudget: double
+  +maxDeliveryMinutes: int
+  +ecoPreferred: boolean
+  +maxEmissionKg: double
+}
+class Location <<record>> {
+  +name: String
+  +latitude: double
+  +longitude: double
+}
+enum DeliveryPriority {
+  URGENT
+  ECONOMY
+  ECO
+  STANDARD
+}
+class RouteDecision <<record>> {
+  +route: Route
+  +strategyName: String
+  +score: double
+  +explanation: String
+  +rejectedRoutes: Map<String, String>
+}
+RoutePlanner --> RouteStrategy : delegates
+RouteStrategy <|.. ScoredRouteStrategy
+ScoredRouteStrategy <|-- FastestRouteStrategy
+ScoredRouteStrategy <|-- CheapestRouteStrategy
+ScoredRouteStrategy <|-- EcoFriendlyRouteStrategy
+ScoredRouteStrategy <|-- BalancedRouteStrategy
+ScoredRouteStrategy <|-- DistanceFirstRouteStrategy
+ScoredRouteStrategy ..> RouteConstraints : filters first
+ScoredRouteStrategy ..> RouteDecision : creates
+ScoredRouteStrategy ..> NoSuitableRouteException : throws
+RuntimeException <|-- NoSuitableRouteException
+RouteStrategy ..> Route : evaluates
+RouteStrategy ..> DeliveryRequest : reads
+RouteStrategy ..> RouteDecision : returns
+StrategySelector --> RouteStrategy : stores and selects
+StrategySelector ..> DeliveryRequest : reads priority and preference
+StrategyComparison --> RouteStrategy : stores
+StrategyComparison ..> RoutePlanner : creates per algorithm
+Main ..> RoutePlanner
+Main ..> StrategySelector
+Main ..> StrategyComparison
+Main ..> DemoData
+Route --> Location
+DeliveryRequest --> Location
+DeliveryRequest --> DeliveryPriority
+RouteDecision --> Route
+@enduml

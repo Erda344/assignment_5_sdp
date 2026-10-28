@@ -1,0 +1,57 @@
+RUNTIME SWITCHING - same planner, three changes
+Fastest -> Route B
+Reason: time = estimated minutes + traffic penalty + weather penalty; base time 20 + traffic 2 + weather 0 = 22.0 min; total cost 4300.00; distance 14.00 km; CO2 5.00 kg; score 22.000000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Cheapest -> Route D
+Reason: cost = (base + distance * rate + fees) * priority multiplier (URGENT 1.2, others 1.0); base time 35 + traffic 5 + weather 0 = 40.0 min; total cost 1100.00; distance 12.00 km; CO2 3.00 kg; score 1100.000000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Eco -> Route C
+Reason: eco score = CO2 kg * 0.8 + distance km * 0.2 (simulation coefficients); base time 42 + traffic 0 + weather 0 = 42.0 min; total cost 1800.00; distance 8.00 km; CO2 0.80 kg; score 2.240000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Balanced -> Route H
+Reason: balanced score = normalized time * 0.4 + normalized cost * 0.3 + normalized distance * 0.1 + normalized CO2 * 0.2; base time 30 + traffic 2 + weather 1 = 33.0 min; total cost 2460.00; distance 11.00 km; CO2 1.50 kg; score 0.410137. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+AUTOMATIC SELECTION - dynamic requests
+Fastest -> Route B
+Reason: time = estimated minutes + traffic penalty + weather penalty; base time 20 + traffic 2 + weather 0 = 22.0 min; total cost 5160.00; distance 14.00 km; CO2 5.00 kg; score 22.000000. Lowest score wins; ties use route ID.
+Rejected C: Delivery deadline exceeded
+Rejected D: Delivery deadline exceeded
+Rejected E: Delivery deadline exceeded
+Rejected F: Route unavailable
+Rejected H: Delivery deadline exceeded
+Cheapest -> Route D
+Reason: cost = (base + distance * rate + fees) * priority multiplier (URGENT 1.2, others 1.0); base time 35 + traffic 5 + weather 0 = 40.0 min; total cost 1100.00; distance 12.00 km; CO2 3.00 kg; score 1100.000000. Lowest score wins; ties use route ID.
+Rejected A: Budget exceeded
+Rejected B: Budget exceeded
+Rejected E: Budget exceeded
+Rejected F: Route unavailable
+Rejected G: Budget exceeded
+Rejected H: Budget exceeded
+Eco -> Route C
+Reason: eco score = CO2 kg * 0.8 + distance km * 0.2 (simulation coefficients); base time 42 + traffic 0 + weather 0 = 42.0 min; total cost 1800.00; distance 8.00 km; CO2 0.80 kg; score 2.240000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Eco -> Route E
+Reason: eco score = CO2 kg * 0.8 + distance km * 0.2 (simulation coefficients); base time 28 + traffic 3 + weather 2 = 33.0 min; total cost 2880.00; distance 6.00 km; CO2 2.00 kg; score 2.800000. Lowest score wins; ties use route ID.
+Rejected C: Delivery deadline exceeded
+Rejected D: Delivery deadline exceeded
+Rejected F: Route unavailable
+COMPARISON - same standard request
+Fastest -> Route B
+Reason: time = estimated minutes + traffic penalty + weather penalty; base time 20 + traffic 2 + weather 0 = 22.0 min; total cost 4300.00; distance 14.00 km; CO2 5.00 kg; score 22.000000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Cheapest -> Route D
+Reason: cost = (base + distance * rate + fees) * priority multiplier (URGENT 1.2, others 1.0); base time 35 + traffic 5 + weather 0 = 40.0 min; total cost 1100.00; distance 12.00 km; CO2 3.00 kg; score 1100.000000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Eco -> Route C
+Reason: eco score = CO2 kg * 0.8 + distance km * 0.2 (simulation coefficients); base time 42 + traffic 0 + weather 0 = 42.0 min; total cost 1800.00; distance 8.00 km; CO2 0.80 kg; score 2.240000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Balanced -> Route H
+Reason: balanced score = normalized time * 0.4 + normalized cost * 0.3 + normalized distance * 0.1 + normalized CO2 * 0.2; base time 30 + traffic 2 + weather 1 = 33.0 min; total cost 2460.00; distance 11.00 km; CO2 1.50 kg; score 0.410137. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+Distance first -> Route E
+Reason: distance score = distance in km; base time 28 + traffic 3 + weather 2 = 33.0 min; total cost 2880.00; distance 6.00 km; CO2 2.00 kg; score 6.000000. Lowest score wins; ties use route ID.
+Rejected F: Route unavailable
+FAILURE EXAMPLES
+NoSuitableRouteException: No suitable route: empty route list
+NoSuitableRouteException: No suitable route: {A=Budget exceeded; Delivery deadline exceeded, B=Budget exceeded; Delivery deadline exceeded, C=Budget exceeded; Delivery deadline exceeded, D=Budget exceeded; Delivery deadline exceeded, E=Budget exceeded; Delivery deadline exceeded, F=Route unavailable; Budget exceeded; Delivery deadline exceeded, G=Budget exceeded; Delivery deadline exceeded, H=Budget exceeded; Delivery deadline exceeded}
+IllegalArgumentException: Weights must sum to 1.0

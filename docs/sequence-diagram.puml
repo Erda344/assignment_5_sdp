@@ -1,0 +1,37 @@
+@startuml
+title Automatic Strategy Selection and Route Planning
+actor User
+participant Main
+participant StrategySelector as Selector
+participant RoutePlanner as Planner
+participant FastestRouteStrategy as Strategy
+participant RouteConstraints as Constraints
+User -> Main : run application
+Main -> Selector : select(urgentRequest)
+Selector --> Main : fastestStrategy
+Main -> Planner : setStrategy(fastestStrategy)
+Main -> Planner : plan(routes, urgentRequest)
+Planner -> Strategy : selectRoute(routes, urgentRequest)
+activate Strategy
+note right of Strategy
+selectRoute is inherited
+from ScoredRouteStrategy.
+end note
+loop every candidate route
+  Strategy -> Constraints : violations(route, urgentRequest)
+  Constraints --> Strategy : rejection reasons or empty list
+end
+alt at least one feasible route
+  Strategy -> Strategy : scoring(feasible, request)
+  Strategy -> Strategy : minimize finalMinutes; ties by ID
+  create participant RouteDecision as Decision
+  Strategy -> Decision : new(selected, name, score, explanation, rejected)
+  Strategy --> Planner : RouteDecision
+  Planner --> Main : RouteDecision
+  Main --> User : selected route and explanation
+else no feasible route
+  Strategy --> Planner : throw NoSuitableRouteException
+  Planner --> Main : propagate exception
+end
+deactivate Strategy
+@enduml
